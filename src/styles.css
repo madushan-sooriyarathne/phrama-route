@@ -1,0 +1,81 @@
+
+@import "tailwindcss";
+
+@theme {
+  /* Brand & Accent */
+  --color-primary: oklch(0.230 0.019 262.11);
+  --color-primary-active: oklch(0.180 0.015 253.22);
+
+  /* Surface */
+  --color-canvas: oklch(1.000 0.000 89.88);
+  --color-surface-soft: oklch(0.984 0.003 247.86);
+  --color-surface-strong: oklch(0.912 0.006 264.53);
+  --color-hairline: oklch(0.898 0.000 89.88);
+
+  /* Text */
+  --color-ink: oklch(0.230 0.019 262.11);
+  --color-body: oklch(0.339 0.016 259.81);
+  --color-muted: oklch(0.390 0.015 264.39);
+  --color-on-primary: oklch(1.000 0.000 89.88);
+
+  /* Signature Workflow Surfaces */
+  --color-signature-forest: oklch(0.267 0.069 145.14);
+  --color-signature-coral: oklch(0.489 0.168 36.02);
+  --color-signature-cream: oklch(0.938 0.031 81.75);
+
+  /* Semantic */
+  --color-link: oklch(0.513 0.176 259.09);
+  --color-success: oklch(0.436 0.148 142.50);
+  --color-error: oklch(0.489 0.168 36.02);
+
+  /* Typography - Font Family */
+  --font-sans: "Haas Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "Inter Display", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Typography - Hierarchy */
+  --text-display-lg: 40px;
+  --text-display-lg--line-height: 1.2;
+  --text-display-md: 32px;
+  --text-display-md--line-height: 1.2;
+  --text-title-lg: 24px;
+  --text-title-lg--line-height: 1.35;
+  --text-label-md: 16px;
+  --text-label-md--line-height: 1.4;
+  --text-button: 16px;
+  --text-button--line-height: 1.4;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 1.25;
+  --text-pricing-display: 20px;
+  --text-pricing-display--line-height: 1.1;
+  --text-total-sum: 32px;
+  --text-total-sum--line-height: 1.1;
+
+  /* Layout - Spacing System */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-section: 96px;
+
+  /* Shapes - Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
