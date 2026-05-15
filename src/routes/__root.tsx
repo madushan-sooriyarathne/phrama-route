@@ -48,7 +48,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "PharmaRoute",
 			},
 		],
 		links: [
@@ -71,7 +71,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				{/* @ts-expect-error - Better auth type mismatch between UI and client */}
-				<NeonAuthUIProvider authClient={authClient}>
+				<NeonAuthUIProvider authClient={authClient} signUp={false}>
 					{children}
 				</NeonAuthUIProvider>
 				<TanStackDevtools

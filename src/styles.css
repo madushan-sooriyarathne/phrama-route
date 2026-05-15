@@ -1,26 +1,49 @@
 @import "tailwindcss";
-@import "@neondatabase/auth-ui/css";
+@import "@neondatabase/auth-ui/tailwind";
 
+/*
+ * Design System Token Bridge
+ * Maps the "Quietly Editorial" design tokens to the shadcn-style variables
+ * that @neondatabase/auth-ui reads. The library uses --primary, --background,
+ * etc. — NOT --neon-* prefixes.
+ */
 :root {
-  /* Map our design system to Neon Auth UI's variables */
-  --neon-background: var(--color-canvas);
-  --neon-foreground: var(--color-ink);
-  --neon-card: var(--color-canvas);
-  --neon-card-foreground: var(--color-ink);
-  --neon-popover: var(--color-canvas);
-  --neon-popover-foreground: var(--color-ink);
-  
-  --neon-primary: var(--color-primary);
-  --neon-primary-foreground: var(--color-on-primary);
-  
-  --neon-muted: var(--color-surface-soft);
-  --neon-muted-foreground: var(--color-muted);
-  
-  --neon-border: var(--color-hairline);
-  --neon-input: var(--color-hairline);
-  --neon-ring: var(--color-primary);
-  
-  --neon-radius: var(--radius-md);
+  /* Primary — buttons, active states, focus rings */
+  --primary: oklch(0.230 0.019 262.11);
+  --primary-foreground: oklch(1.000 0.000 89.88);
+
+  /* Background / Foreground */
+  --background: oklch(1.000 0.000 89.88);
+  --foreground: oklch(0.230 0.019 262.11);
+
+  /* Card / Popover */
+  --card: oklch(1.000 0.000 89.88);
+  --card-foreground: oklch(0.230 0.019 262.11);
+  --popover: oklch(1.000 0.000 89.88);
+  --popover-foreground: oklch(0.230 0.019 262.11);
+
+  /* Secondary */
+  --secondary: oklch(0.984 0.003 247.86);
+  --secondary-foreground: oklch(0.230 0.019 262.11);
+
+  /* Muted — placeholders, disabled states, inactive inputs */
+  --muted: oklch(0.984 0.003 247.86);
+  --muted-foreground: oklch(0.390 0.015 264.39);
+
+  /* Accent — hover states */
+  --accent: oklch(0.984 0.003 247.86);
+  --accent-foreground: oklch(0.230 0.019 262.11);
+
+  /* Destructive — errors, alert states */
+  --destructive: oklch(0.489 0.168 36.02);
+
+  /* UI Structure */
+  --border: oklch(0.898 0.000 89.88);
+  --input: oklch(0.898 0.000 89.88);
+  --ring: oklch(0.230 0.019 262.11);
+
+  /* Border radius — uses radius-md (10px) as base */
+  --radius: 0.625rem;
 }
 
 @theme {
@@ -72,13 +95,13 @@
   --text-total-sum: 32px;
   --text-total-sum--line-height: 1.1;
 
-  /* Layout - Spacing System */
-  --spacing-xs: 8px;
-  --spacing-sm: 12px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-section: 96px;
+  /* Layout - Spacing System (prefixed to avoid Tailwind v4 spacing scale collision) */
+  --spacing-gap-xs: 8px;
+  --spacing-gap-sm: 12px;
+  --spacing-gap-md: 16px;
+  --spacing-gap-lg: 24px;
+  --spacing-gap-xl: 32px;
+  --spacing-gap-section: 96px;
 
   /* Shapes - Border Radius */
   --radius-sm: 6px;
@@ -99,5 +122,23 @@ body,
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
