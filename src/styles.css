@@ -1,5 +1,27 @@
 @import "tailwindcss";
-@import "@neondatabase/auth-ui/tailwind";
+@import "@neondatabase/auth-ui/css";
+
+:root {
+  /* Map our design system to Neon Auth UI's variables */
+  --neon-background: var(--color-canvas);
+  --neon-foreground: var(--color-ink);
+  --neon-card: var(--color-canvas);
+  --neon-card-foreground: var(--color-ink);
+  --neon-popover: var(--color-canvas);
+  --neon-popover-foreground: var(--color-ink);
+  
+  --neon-primary: var(--color-primary);
+  --neon-primary-foreground: var(--color-on-primary);
+  
+  --neon-muted: var(--color-surface-soft);
+  --neon-muted-foreground: var(--color-muted);
+  
+  --neon-border: var(--color-hairline);
+  --neon-input: var(--color-hairline);
+  --neon-ring: var(--color-primary);
+  
+  --neon-radius: var(--radius-md);
+}
 
 @theme {
   /* Brand & Accent */
