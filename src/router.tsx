@@ -1,12 +1,12 @@
-import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import * as Sentry from "@sentry/tanstackstart-react";
+import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import type { ReactNode } from "react";
+import { env } from "./env";
 import TanstackQueryProvider, {
 	getContext,
 } from "./integrations/tanstack-query/root-provider";
 import { routeTree } from "./routeTree.gen";
-import { env } from "./env";
 
 export function getRouter() {
 	const context = getContext();
@@ -30,12 +30,12 @@ export function getRouter() {
 	setupRouterSsrQueryIntegration({ router, queryClient: context.queryClient });
 
 	if (!router.isServer) {
-    Sentry.init({
-      dsn: env.VITE_SENTRY_DSN,
-      sendDefaultPii: true, // Adds request headers and IP for users
-      enableLogs: true, // Enable logs to be sent to Sentry
-    });
-  }
+		Sentry.init({
+			dsn: env.VITE_SENTRY_DSN,
+			sendDefaultPii: true, // Adds request headers and IP for users
+			enableLogs: true, // Enable logs to be sent to Sentry
+		});
+	}
 
 	return router;
 }

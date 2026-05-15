@@ -1,9 +1,15 @@
-import { betterAuth } from "better-auth";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { authClient } from "./auth-client";
 
-export const auth = betterAuth({
-	emailAndPassword: {
-		enabled: true,
-	},
-	plugins: [tanstackStartCookies()],
-});
+export const verifySession = async (headers: Headers) => {
+	const { data, error } = await authClient.getSession({
+		fetchOptions: {
+			headers,
+		},
+	});
+
+	if (error) {
+		throw new Error(error.message || "Failed to verify session");
+	}
+
+	return data;
+};
