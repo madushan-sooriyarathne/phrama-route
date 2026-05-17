@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import superjson from "superjson";
 import { TRPCProvider } from "#/integrations/trpc/react";
 import type { TRPCRouter } from "#/integrations/trpc/router";
+import { authClient } from "#/lib/auth-client";
 
 function getUrl() {
 	const base = (() => {
@@ -19,6 +20,12 @@ export const trpcClient = createTRPCClient<TRPCRouter>({
 		httpBatchStreamLink({
 			transformer: superjson,
 			url: getUrl(),
+			async headers() {
+				if (typeof window === "undefined") return {};
+				const { data } = await authClient.getSession();
+				const token = data?.session?.token;
+				return token ? { authorization: `Bearer ${token}` } : {};
+			},
 		}),
 	],
 });

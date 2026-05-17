@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { TRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { ProfileSheet } from "#/features/profile/components/ProfileSheet";
+import { ProfileSheetProvider } from "#/features/profile/context/ProfileSheetContext";
 import type { TRPCRouter } from "#/integrations/trpc/router";
 import { authClient } from "#/lib/auth-client";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -70,9 +72,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				{/* @ts-expect-error - Better auth type mismatch between UI and client */}
 				<NeonAuthUIProvider authClient={authClient} signUp={false}>
-					{children}
+					<ProfileSheetProvider>
+						{children}
+						<ProfileSheet />
+					</ProfileSheetProvider>
 				</NeonAuthUIProvider>
 				<TanStackDevtools
 					config={{

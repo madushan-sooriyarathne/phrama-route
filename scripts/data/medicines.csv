@@ -1,7 +1,7 @@
-Name,Technical Name,Price,Rep ID
-Paracetamol,Acetaminophen,5.50,3
-Ibuprofen,Ibuprofen,7.25,3
-Amoxicillin,Amoxicillin,12.00,4
-Loratadine,Loratadine,4.75,4
-Omeprazole,Omeprazole,9.50,5
-Metformin,Metformin,6.00,5
+Name,Technical Name,Price
+Paracetamol,Acetaminophen,5.50
+Ibuprofen,Ibuprofen,7.25
+Amoxicillin,Amoxicillin,12.00
+Loratadine,Loratadine,4.75
+Omeprazole,Omeprazole,9.50
+Metformin,Metformin,6.00

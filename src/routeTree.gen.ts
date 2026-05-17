@@ -13,6 +13,8 @@ import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrdersNewRouteImport } from './routes/orders_.new'
 import { Route as AuthPathnameRouteImport } from './routes/auth.$pathname'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminInventoryRouteImport } from './routes/admin.inventory'
 import { Route as AccountPathnameRouteImport } from './routes/account.$pathname'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api.trpc.$'
 
@@ -36,6 +38,16 @@ const AuthPathnameRoute = AuthPathnameRouteImport.update({
   path: '/auth/$pathname',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInventoryRoute = AdminInventoryRouteImport.update({
+  id: '/admin/inventory',
+  path: '/admin/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountPathnameRoute = AccountPathnameRouteImport.update({
   id: '/account/$pathname',
   path: '/account/$pathname',
@@ -51,6 +63,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
   '/account/$pathname': typeof AccountPathnameRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
   '/orders/new': typeof OrdersNewRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -59,6 +73,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
   '/account/$pathname': typeof AccountPathnameRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
   '/orders/new': typeof OrdersNewRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -68,6 +84,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
   '/account/$pathname': typeof AccountPathnameRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
   '/orders_/new': typeof OrdersNewRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -78,6 +96,8 @@ export interface FileRouteTypes {
     | '/'
     | '/orders'
     | '/account/$pathname'
+    | '/admin/inventory'
+    | '/admin/users'
     | '/auth/$pathname'
     | '/orders/new'
     | '/api/trpc/$'
@@ -86,6 +106,8 @@ export interface FileRouteTypes {
     | '/'
     | '/orders'
     | '/account/$pathname'
+    | '/admin/inventory'
+    | '/admin/users'
     | '/auth/$pathname'
     | '/orders/new'
     | '/api/trpc/$'
@@ -94,6 +116,8 @@ export interface FileRouteTypes {
     | '/'
     | '/orders'
     | '/account/$pathname'
+    | '/admin/inventory'
+    | '/admin/users'
     | '/auth/$pathname'
     | '/orders_/new'
     | '/api/trpc/$'
@@ -103,6 +127,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OrdersRoute: typeof OrdersRoute
   AccountPathnameRoute: typeof AccountPathnameRoute
+  AdminInventoryRoute: typeof AdminInventoryRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AuthPathnameRoute: typeof AuthPathnameRoute
   OrdersNewRoute: typeof OrdersNewRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
@@ -138,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPathnameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/inventory': {
+      id: '/admin/inventory'
+      path: '/admin/inventory'
+      fullPath: '/admin/inventory'
+      preLoaderRoute: typeof AdminInventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/$pathname': {
       id: '/account/$pathname'
       path: '/account/$pathname'
@@ -159,6 +199,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OrdersRoute: OrdersRoute,
   AccountPathnameRoute: AccountPathnameRoute,
+  AdminInventoryRoute: AdminInventoryRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AuthPathnameRoute: AuthPathnameRoute,
   OrdersNewRoute: OrdersNewRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,

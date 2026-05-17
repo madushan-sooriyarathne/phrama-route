@@ -7,6 +7,7 @@ import {
 	medicines,
 	pharmacies,
 	repMedicines,
+	repRoutes,
 	routePharmacies,
 	routes,
 } from "#/db/schema/core.ts";
@@ -53,7 +54,18 @@ const medicineRowSchema = z.object({
 	Name: z.string().min(1),
 	"Technical Name": z.string().optional().default(""),
 	Price: z.string().regex(/^\d+(\.\d+)?$/, "expected decimal price"),
-	"Rep ID": lineRef,
+});
+
+const repRouteRowSchema = z.object({
+	line: z.number(),
+	"Assigned User's ID": lineRef,
+	"Route ID": lineRef,
+});
+
+const repMedicineRowSchema = z.object({
+	line: z.number(),
+	"Assigned User's ID": lineRef,
+	"Medicine ID": lineRef,
 });
 
 const loadCsv = async <T extends z.ZodTypeAny>(
@@ -195,26 +207,69 @@ const upsertMedicine = async (
 
 const seedMedicines = async (
 	rows: z.infer<typeof medicineRowSchema>[],
-	userMap: Map<number, string>,
-): Promise<void> => {
+): Promise<Map<number, string>> => {
+	const map = new Map<number, string>();
 	for (const row of rows) {
-		const repId = userMap.get(row["Rep ID"]);
-		if (!repId) {
-			throw new Error(
-				`medicines line ${row.line}: Rep line ${row["Rep ID"]} not found`,
-			);
-		}
 		const medicineId = await upsertMedicine(
 			row.Name,
 			row["Technical Name"],
 			row.Price,
 		);
+		map.set(row.line, medicineId);
+		console.log(
+			`  medicine line=${row.line} name=${row.Name} id=${medicineId}`,
+		);
+	}
+	return map;
+};
+
+const seedRepRoutes = async (
+	rows: z.infer<typeof repRouteRowSchema>[],
+	userMap: Map<number, string>,
+	routeMap: Map<number, string>,
+): Promise<void> => {
+	for (const row of rows) {
+		const repId = userMap.get(row["Assigned User's ID"]);
+		if (!repId) {
+			throw new Error(
+				`rep_routes line ${row.line}: User line ${row["Assigned User's ID"]} not found`,
+			);
+		}
+		const routeId = routeMap.get(row["Route ID"]);
+		if (!routeId) {
+			throw new Error(
+				`rep_routes line ${row.line}: Route line ${row["Route ID"]} not found`,
+			);
+		}
+		await db.insert(repRoutes).values({ repId, routeId }).onConflictDoNothing();
+		console.log(`  rep_route line=${row.line} rep=${repId} → route=${routeId}`);
+	}
+};
+
+const seedRepMedicines = async (
+	rows: z.infer<typeof repMedicineRowSchema>[],
+	userMap: Map<number, string>,
+	medicineMap: Map<number, string>,
+): Promise<void> => {
+	for (const row of rows) {
+		const repId = userMap.get(row["Assigned User's ID"]);
+		if (!repId) {
+			throw new Error(
+				`rep_medicines line ${row.line}: User line ${row["Assigned User's ID"]} not found`,
+			);
+		}
+		const medicineId = medicineMap.get(row["Medicine ID"]);
+		if (!medicineId) {
+			throw new Error(
+				`rep_medicines line ${row.line}: Medicine line ${row["Medicine ID"]} not found`,
+			);
+		}
 		await db
 			.insert(repMedicines)
 			.values({ repId, medicineId })
 			.onConflictDoNothing();
 		console.log(
-			`  medicine line=${row.line} name=${row.Name} id=${medicineId} → rep=${repId}`,
+			`  rep_medicine line=${row.line} rep=${repId} → medicine=${medicineId}`,
 		);
 	}
 };
@@ -237,10 +292,21 @@ const main = async () => {
 
 	console.log("→ medicines.csv");
 	const medicineRows = await loadCsv("medicines.csv", medicineRowSchema);
-	await seedMedicines(medicineRows, userMap);
+	const medicineMap = await seedMedicines(medicineRows);
+
+	console.log("→ rep_routes.csv");
+	const repRouteRows = await loadCsv("rep_routes.csv", repRouteRowSchema);
+	await seedRepRoutes(repRouteRows, userMap, routeMap);
+
+	console.log("→ rep_medicines.csv");
+	const repMedicineRows = await loadCsv(
+		"rep_medicines.csv",
+		repMedicineRowSchema,
+	);
+	await seedRepMedicines(repMedicineRows, userMap, medicineMap);
 
 	console.log(
-		`✓ seed complete: ${userRows.length} users, ${routeRows.length} routes, ${pharmacyRows.length} pharmacies, ${medicineRows.length} medicines`,
+		`✓ seed complete: ${userRows.length} users, ${routeRows.length} routes, ${pharmacyRows.length} pharmacies, ${medicineRows.length} medicines, ${repRouteRows.length} rep_routes, ${repMedicineRows.length} rep_medicines`,
 	);
 };
 

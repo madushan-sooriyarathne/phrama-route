@@ -9,7 +9,20 @@
       "Bash(pnpm add *)",
       "Bash(pnpm exec *)",
       "Bash(pnpm db:seed)",
-      "Bash(grep -vE \"info|^$|━━━\")"
+      "Bash(grep -vE \"info|^$|━━━\")",
+      "Bash(git checkout *)",
+      "Bash(git stash *)",
+      "Read(//tmp/**)",
+      "Bash(git apply *)",
+      "Bash(pnpm tsc *)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(pnpm biome *)",
+      "Bash(pnpm vitest *)",
+      "Bash(timeout 30 pnpm vite build)",
+      "Bash(pnpm build *)",
+      "Bash(read d *)",
+      "Bash(find /Users/madushan/Developer/phrama-route/node_modules/.pnpm/@tanstack+start-fn-stubs@*/node_modules/@tanstack/start-fn-stubs -name \"*.d.ts\")",
+      "Bash(find /Users/madushan/Developer/phrama-route/node_modules/.pnpm/@neondatabase+auth@*/node_modules/@neondatabase/auth/dist/react -type f)"
     ]
   }
 }
