@@ -22,8 +22,6 @@
     "db:seed": "dotenv -e .env.local -e .env -- tsx scripts/seed.ts"
   },
   "dependencies": {
-    "@neondatabase/auth-ui": "0.2.0-beta",
-    "@neondatabase/neon-js": "0.6.1-beta",
     "@neondatabase/serverless": "^1.0.2",
     "@sentry/tanstackstart-react": "^10.42.0",
     "@t3-oss/env-core": "^0.13.10",

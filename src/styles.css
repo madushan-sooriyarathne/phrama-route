@@ -1,11 +1,9 @@
 @import "tailwindcss";
-@import "@neondatabase/auth-ui/tailwind";
 
 /*
  * Design System Token Bridge
- * Maps the "Quietly Editorial" design tokens to the shadcn-style variables
- * that @neondatabase/auth-ui reads. The library uses --primary, --background,
- * etc. — NOT --neon-* prefixes.
+ * Maps the "Quietly Editorial" design tokens to shadcn-style CSS variables
+ * used by our own UI components.
  */
 :root {
   /* Primary — buttons, active states, focus rings */

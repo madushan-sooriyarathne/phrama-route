@@ -1,5 +1,5 @@
-import { RedirectToSignIn, SignedIn } from "@neondatabase/auth-ui";
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthGuard } from "#/features/auth/components/AuthGuard";
 import { NewOrderScreen } from "#/features/orders/components/NewOrderScreen";
 
 export const Route = createFileRoute("/orders_/new")({
@@ -8,11 +8,8 @@ export const Route = createFileRoute("/orders_/new")({
 
 function NewOrderPage() {
 	return (
-		<>
-			<SignedIn>
-				<NewOrderScreen />
-			</SignedIn>
-			<RedirectToSignIn />
-		</>
+		<AuthGuard>
+			<NewOrderScreen />
+		</AuthGuard>
 	);
 }

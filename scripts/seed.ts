@@ -85,7 +85,6 @@ const loadCsv = async <T extends z.ZodTypeAny>(
 
 const seedUsers = async (
 	rows: z.infer<typeof userRowSchema>[],
-	authBaseUrl: string,
 ): Promise<Map<number, string>> => {
 	const map = new Map<number, string>();
 	for (const row of rows) {
@@ -94,7 +93,6 @@ const seedUsers = async (
 			email: row["Email Address"],
 			role: row["User Role"],
 			password: DEFAULT_PASSWORD,
-			authBaseUrl,
 		});
 		map.set(row.line, id);
 		console.log(
@@ -275,12 +273,11 @@ const seedRepMedicines = async (
 };
 
 const main = async () => {
-	const authBaseUrl = requireEnv("VITE_NEON_AUTH_URL");
 	requireEnv("DATABASE_URL");
 
 	console.log("→ users.csv");
 	const userRows = await loadCsv("users.csv", userRowSchema);
-	const userMap = await seedUsers(userRows, authBaseUrl);
+	const userMap = await seedUsers(userRows);
 
 	console.log("→ routes.csv");
 	const routeRows = await loadCsv("routes.csv", routeRowSchema);

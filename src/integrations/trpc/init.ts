@@ -1,8 +1,8 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { verifySession } from "#/lib/auth";
 import { isAdmin } from "#/lib/role";
+import { verifySession } from "#/lib/verify-session";
 
 export async function createTRPCContext({ req }: { req: Request }) {
 	const session = await verifySession(req.headers).catch(() => null);

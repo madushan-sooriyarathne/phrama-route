@@ -1,4 +1,3 @@
-import { NeonAuthUIProvider } from "@neondatabase/auth-ui";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -12,13 +11,11 @@ import type { TRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { ProfileSheet } from "#/features/profile/components/ProfileSheet";
 import { ProfileSheetProvider } from "#/features/profile/context/ProfileSheetContext";
 import type { TRPCRouter } from "#/integrations/trpc/router";
-import { authClient } from "#/lib/auth-client";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
-
 	trpc: TRPCOptionsProxy<TRPCRouter>;
 }
 
@@ -72,12 +69,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<NeonAuthUIProvider authClient={authClient} signUp={false}>
-					<ProfileSheetProvider>
-						{children}
-						<ProfileSheet />
-					</ProfileSheetProvider>
-				</NeonAuthUIProvider>
+				<ProfileSheetProvider>
+					{children}
+					<ProfileSheet />
+				</ProfileSheetProvider>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
