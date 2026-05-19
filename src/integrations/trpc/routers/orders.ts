@@ -170,16 +170,15 @@ export const ordersRouter = {
 
 				const orderId = crypto.randomUUID();
 
-				await db.transaction(async (tx) => {
-					await tx.insert(orders).values({
+				await db.batch([
+					db.insert(orders).values({
 						id: orderId,
 						repId,
 						pharmacyId: input.pharmacyId,
 						routeId: input.routeId,
 						totalAmount: totalAmount.toFixed(2),
-					});
-
-					await tx.insert(orderItems).values(
+					}),
+					db.insert(orderItems).values(
 						input.items.map((item) => ({
 							orderId,
 							medicineId: item.medicineId,
@@ -187,8 +186,8 @@ export const ordersRouter = {
 							unitPrice: item.unitPrice.toFixed(2),
 							lineTotal: (item.quantity * item.unitPrice).toFixed(2),
 						})),
-					);
-				});
+					),
+				]);
 
 				return { orderId };
 			});

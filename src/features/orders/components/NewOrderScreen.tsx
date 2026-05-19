@@ -86,13 +86,16 @@ export function NewOrderScreen() {
 		if (!selectedRouteId || !selectedPharmacyId || activeItems.length === 0)
 			return;
 
-		await createOrder.mutateAsync({
-			routeId: selectedRouteId,
-			pharmacyId: selectedPharmacyId,
-			items: activeItems,
-		});
-
-		router.navigate({ to: "/orders" });
+		try {
+			await createOrder.mutateAsync({
+				routeId: selectedRouteId,
+				pharmacyId: selectedPharmacyId,
+				items: activeItems,
+			});
+			router.navigate({ to: "/orders" });
+		} catch {
+			// isError is set reactively by TanStack Query; no additional action needed
+		}
 	}
 
 	function handleDiscardConfirm() {
