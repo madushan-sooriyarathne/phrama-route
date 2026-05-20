@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrdersNewRouteImport } from './routes/orders_.new'
+import { Route as OrdersOrderIdRouteImport } from './routes/orders_.$orderId'
 import { Route as AuthPathnameRouteImport } from './routes/auth.$pathname'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminInventoryRouteImport } from './routes/admin.inventory'
 import { Route as AccountPathnameRouteImport } from './routes/account.$pathname'
+import { Route as OrdersOrderIdEditRouteImport } from './routes/orders_.$orderId_.edit'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api.trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
@@ -32,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
 const OrdersNewRoute = OrdersNewRouteImport.update({
   id: '/orders_/new',
   path: '/orders/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
+  id: '/orders_/$orderId',
+  path: '/orders/$orderId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthPathnameRoute = AuthPathnameRouteImport.update({
@@ -54,6 +61,11 @@ const AccountPathnameRoute = AccountPathnameRouteImport.update({
   path: '/account/$pathname',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersOrderIdEditRoute = OrdersOrderIdEditRouteImport.update({
+  id: '/orders_/$orderId_/edit',
+  path: '/orders/$orderId/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -72,9 +84,11 @@ export interface FileRoutesByFullPath {
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
+  '/orders/$orderId': typeof OrdersOrderIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/orders/$orderId/edit': typeof OrdersOrderIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,9 +97,11 @@ export interface FileRoutesByTo {
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
+  '/orders/$orderId': typeof OrdersOrderIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/orders/$orderId/edit': typeof OrdersOrderIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,9 +111,11 @@ export interface FileRoutesById {
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/users': typeof AdminUsersRoute
   '/auth/$pathname': typeof AuthPathnameRoute
+  '/orders_/$orderId': typeof OrdersOrderIdRoute
   '/orders_/new': typeof OrdersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/orders_/$orderId_/edit': typeof OrdersOrderIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -108,9 +126,11 @@ export interface FileRouteTypes {
     | '/admin/inventory'
     | '/admin/users'
     | '/auth/$pathname'
+    | '/orders/$orderId'
     | '/orders/new'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/orders/$orderId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -119,9 +139,11 @@ export interface FileRouteTypes {
     | '/admin/inventory'
     | '/admin/users'
     | '/auth/$pathname'
+    | '/orders/$orderId'
     | '/orders/new'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/orders/$orderId/edit'
   id:
     | '__root__'
     | '/'
@@ -130,9 +152,11 @@ export interface FileRouteTypes {
     | '/admin/inventory'
     | '/admin/users'
     | '/auth/$pathname'
+    | '/orders_/$orderId'
     | '/orders_/new'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/orders_/$orderId_/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -142,9 +166,11 @@ export interface RootRouteChildren {
   AdminInventoryRoute: typeof AdminInventoryRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AuthPathnameRoute: typeof AuthPathnameRoute
+  OrdersOrderIdRoute: typeof OrdersOrderIdRoute
   OrdersNewRoute: typeof OrdersNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
+  OrdersOrderIdEditRoute: typeof OrdersOrderIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -168,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/orders/new'
       fullPath: '/orders/new'
       preLoaderRoute: typeof OrdersNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders_/$orderId': {
+      id: '/orders_/$orderId'
+      path: '/orders/$orderId'
+      fullPath: '/orders/$orderId'
+      preLoaderRoute: typeof OrdersOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/$pathname': {
@@ -198,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountPathnameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders_/$orderId_/edit': {
+      id: '/orders_/$orderId_/edit'
+      path: '/orders/$orderId/edit'
+      fullPath: '/orders/$orderId/edit'
+      preLoaderRoute: typeof OrdersOrderIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -222,9 +262,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdminInventoryRoute: AdminInventoryRoute,
   AdminUsersRoute: AdminUsersRoute,
   AuthPathnameRoute: AuthPathnameRoute,
+  OrdersOrderIdRoute: OrdersOrderIdRoute,
   OrdersNewRoute: OrdersNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
+  OrdersOrderIdEditRoute: OrdersOrderIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

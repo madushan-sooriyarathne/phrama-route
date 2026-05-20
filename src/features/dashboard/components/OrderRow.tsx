@@ -10,10 +10,7 @@ interface OrderRowProps {
 }
 
 function formatAmount(amount: number): string {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-	}).format(amount);
+	return `LKR ${amount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`;
 }
 
 function formatTime(isoString: string): string {

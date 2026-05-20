@@ -8,11 +8,10 @@ interface SummarySectionProps {
 }
 
 function formatSales(amount: number): string {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
+	return `LKR ${amount.toLocaleString("en-LK", {
+		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
-	}).format(amount);
+	})}`;
 }
 
 export function SummarySection({

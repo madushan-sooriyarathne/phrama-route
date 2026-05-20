@@ -1,7 +1,9 @@
+import { Link } from "@tanstack/react-router";
 import { StatusPill } from "#/features/dashboard/components/StatusPill";
 import type { OrderStatus } from "../utils/groupOrdersByDate";
 
 interface OrderRowProps {
+	id: string;
 	displayId: string;
 	pharmacyName: string;
 	totalAmount: number;
@@ -10,10 +12,7 @@ interface OrderRowProps {
 }
 
 function formatAmount(amount: number): string {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-	}).format(amount);
+	return `LKR ${amount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`;
 }
 
 function formatTime(isoString: string): string {
@@ -25,6 +24,7 @@ function formatTime(isoString: string): string {
 }
 
 export function OrderRow({
+	id,
 	displayId,
 	pharmacyName,
 	totalAmount,
@@ -32,7 +32,11 @@ export function OrderRow({
 	status,
 }: OrderRowProps) {
 	return (
-		<div className="flex flex-col gap-2 py-4">
+		<Link
+			to="/orders/$orderId"
+			params={{ orderId: id }}
+			className="flex flex-col gap-2 py-4 hover:bg-surface-soft/50 active:bg-surface-soft rounded-md transition-colors px-2 -mx-2 block"
+		>
 			<div className="flex items-center justify-between">
 				<span className="font-sans text-label-md font-semibold text-ink">
 					{pharmacyName}
@@ -47,6 +51,6 @@ export function OrderRow({
 				</span>
 				<StatusPill status={status} />
 			</div>
-		</div>
+		</Link>
 	);
 }

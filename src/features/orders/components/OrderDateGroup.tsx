@@ -18,6 +18,7 @@ export function OrderDateGroup({ group }: OrderDateGroupProps) {
 				{group.orders.map((order) => (
 					<OrderRow
 						key={order.id}
+						id={order.id}
 						displayId={order.displayId}
 						pharmacyName={order.pharmacyName}
 						totalAmount={order.totalAmount}

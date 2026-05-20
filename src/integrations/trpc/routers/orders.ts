@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/tanstackstart-react";
-import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
 import { and, desc, eq, lt, or } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "#/db";
@@ -13,6 +13,7 @@ import {
 	routePharmacies,
 	routes,
 } from "#/db/schema";
+import { isAdmin } from "#/lib/role";
 import { protectedProcedure } from "../init";
 
 const LIST_LIMIT = 15;
@@ -190,6 +191,167 @@ export const ordersRouter = {
 				]);
 
 				return { orderId };
+			});
+		}),
+
+	get: protectedProcedure
+		.input(z.object({ id: z.string().min(1) }))
+		.query(async ({ ctx, input }) => {
+			return Sentry.startSpan({ name: "orders.get" }, async () => {
+				const order = await db.query.orders.findFirst({
+					where: eq(orders.id, input.id),
+					with: {
+						pharmacy: true,
+						route: true,
+						rep: true,
+						items: {
+							with: {
+								medicine: true,
+							},
+						},
+					},
+				});
+
+				if (!order) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: "Order not found",
+					});
+				}
+
+				const role = (ctx.session.user as { role?: string }).role;
+				const isUserAdmin = isAdmin(role);
+				if (!isUserAdmin && order.repId !== ctx.session.user.id) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: "You do not have access to this order",
+					});
+				}
+
+				return {
+					id: order.id,
+					displayId: deriveDisplayId(order.id),
+					repId: order.repId,
+					repName: order.rep.name,
+					pharmacyId: order.pharmacyId,
+					pharmacyName: order.pharmacy.name,
+					pharmacyAddress: order.pharmacy.address,
+					routeId: order.routeId,
+					routeName: order.route.routeName,
+					totalAmount: Number(order.totalAmount),
+					status: order.status,
+					createdAt: order.createdAt.toISOString(),
+					items: order.items.map((item) => ({
+						id: item.id,
+						medicineId: item.medicineId,
+						medicineName: item.medicine.name,
+						genericName: item.medicine.genericName,
+						quantity: item.quantity,
+						unitPrice: Number(item.unitPrice),
+						lineTotal: Number(item.lineTotal),
+					})),
+				};
+			});
+		}),
+
+	update: protectedProcedure
+		.input(
+			z.object({
+				id: z.string().min(1),
+				routeId: z.string().min(1),
+				pharmacyId: z.string().min(1),
+				items: z
+					.array(
+						z.object({
+							medicineId: z.string().min(1),
+							quantity: z.number().int().min(1),
+							unitPrice: z.number().positive(),
+						}),
+					)
+					.min(1),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			return Sentry.startSpan({ name: "orders.update" }, async () => {
+				const order = await db.query.orders.findFirst({
+					where: eq(orders.id, input.id),
+				});
+
+				if (!order) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: "Order not found",
+					});
+				}
+
+				const role = (ctx.session.user as { role?: string }).role;
+				const isUserAdmin = isAdmin(role);
+				if (!isUserAdmin && order.repId !== ctx.session.user.id) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: "You do not have permission to edit this order",
+					});
+				}
+
+				const totalAmount = input.items.reduce(
+					(sum, item) => sum + item.quantity * item.unitPrice,
+					0,
+				);
+
+				await db.batch([
+					db
+						.update(orders)
+						.set({
+							routeId: input.routeId,
+							pharmacyId: input.pharmacyId,
+							totalAmount: totalAmount.toFixed(2),
+							updatedAt: new Date(),
+						})
+						.where(eq(orders.id, input.id)),
+
+					db.delete(orderItems).where(eq(orderItems.orderId, input.id)),
+
+					db.insert(orderItems).values(
+						input.items.map((item) => ({
+							orderId: input.id,
+							medicineId: item.medicineId,
+							quantity: item.quantity,
+							unitPrice: item.unitPrice.toFixed(2),
+							lineTotal: (item.quantity * item.unitPrice).toFixed(2),
+						})),
+					),
+				]);
+
+				return { success: true };
+			});
+		}),
+
+	delete: protectedProcedure
+		.input(z.object({ id: z.string().min(1) }))
+		.mutation(async ({ ctx, input }) => {
+			return Sentry.startSpan({ name: "orders.delete" }, async () => {
+				const order = await db.query.orders.findFirst({
+					where: eq(orders.id, input.id),
+				});
+
+				if (!order) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: "Order not found",
+					});
+				}
+
+				const role = (ctx.session.user as { role?: string }).role;
+				const isUserAdmin = isAdmin(role);
+				if (!isUserAdmin && order.repId !== ctx.session.user.id) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: "You do not have permission to delete this order",
+					});
+				}
+
+				await db.delete(orders).where(eq(orders.id, input.id));
+				return { success: true };
 			});
 		}),
 } satisfies TRPCRouterRecord;

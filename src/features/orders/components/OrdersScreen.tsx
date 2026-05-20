@@ -16,13 +16,12 @@ export function OrdersScreen() {
 		isFetchingNextPage,
 		fetchNextPage,
 	} = useInfiniteQuery(
-		trpc.orders.list.infiniteQueryOptions(
-			{ limit: 15 },
-			{
-				getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-				initialPageParam: undefined,
-			},
-		),
+		trpc.orders.list.infiniteQueryOptions({ limit: 15 }, {
+			getNextPageParam: (lastPage: {
+				nextCursor: { createdAt: string; id: string } | null;
+			}) => lastPage.nextCursor ?? undefined,
+			initialPageParam: undefined,
+		} as never),
 	);
 
 	const allOrders = data?.pages.flatMap((page) => page.items) ?? [];
