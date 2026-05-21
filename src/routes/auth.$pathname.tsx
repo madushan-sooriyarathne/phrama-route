@@ -65,21 +65,29 @@ function SignInForm() {
 		e.preventDefault();
 		setError(null);
 		setPending(true);
-		const email = emailRef.current?.value ?? "";
-		const password = passwordRef.current?.value ?? "";
 
-		const { error: authError } = await authClient.signIn.email({
-			email,
-			password,
-		});
+		try {
+			const email = emailRef.current?.value ?? "";
+			const password = passwordRef.current?.value ?? "";
 
-		if (authError) {
-			setError(authError.message ?? "Sign-in failed. Check your credentials.");
+			const { error: authError } = await authClient.signIn.email({
+				email,
+				password,
+			});
+
+			if (authError) {
+				setError(
+					authError.message ?? "Sign-in failed. Check your credentials.",
+				);
+				return;
+			}
+
+			await navigate({ to: "/" });
+		} catch {
+			setError("Unable to reach the server. Please try again.");
+		} finally {
 			setPending(false);
-			return;
 		}
-
-		await navigate({ to: "/" });
 	};
 
 	return (
